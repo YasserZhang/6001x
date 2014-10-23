@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 ### decision trees and tree search
 
 ### first version is just a binary tree
-
+# building node instances
 class binaryTree(object):
     def __init__(self, value):
         self.value = value
@@ -32,6 +33,7 @@ def DFSBinary(root, fcn):
         if fcn(queue[0]):
             return True
         else:
+            #去掉第一个node，代之以它下面的两个分支node，并从左至右排在列表的最前面。
             temp = queue.pop(0)
             if temp.getRightBranch():
                 queue.insert(0, temp.getRightBranch())
@@ -47,6 +49,7 @@ def BFSBinary(root, fcn):
         if fcn(queue[0]):
             return True
         else:
+            #去掉第一个node，代之以它下面的两个分支node，并从左至右排在列表的最后面。
             temp = queue.pop(0)
             if temp.getLeftBranch():
                 queue.append(temp.getLeftBranch())
@@ -54,7 +57,8 @@ def BFSBinary(root, fcn):
                 queue.append(temp.getRightBranch())
     return False
 
-
+# in this funcion, the tree is ordered, with left branch node being less than
+# the parent node and right branch node being greater than it
 def DFSBinaryOrdered(root, fcn, ltFcn):
     queue = [root]
     while len(queue) > 0:
@@ -150,6 +154,8 @@ print [e.getValue() for e in pathTo6]
 ## make a decision tree
 ## for efficiency should really generate on the fly, but here will build
 ## and then search
+# it builds a tree of instances binaryTree class, but unlike assigning a name to an 
+# instance, these instances don't have names. 
 i = 0
 j = 0
 def buildDTree(sofar, todo):
@@ -222,12 +228,21 @@ b = [7,2]
 c = [8,4]
 d = [9,5]
 
-treeTest = buildDTree([], [a,b,c,d])
+treeTest = buildDTree([], [a,b,c,d]) # this call does not give me one instance, but 1+2+4+8+16 instances!
 print treeTest.getValue()
 print treeTest.getLeftBranch().getValue()
 print treeTest.getLeftBranch().getLeftBranch().getValue()
 print treeTest.getLeftBranch().getLeftBranch().getLeftBranch().getValue()
 print treeTest.getLeftBranch().getLeftBranch().getLeftBranch().getLeftBranch().getValue()
+"""
+                                                    [] (1 instance) --> treeTest, the only node instance having a name 
+                               [a]                   #                     []       (2 instances)
+                 [a,b]                     [a]       #           [b]                []    (4 instances)
+        [a,b,c]        [a,b]         [a,c]      [a]  #     [b,c]      [b]       [c]    []    (8 instances)
+  [a,b,c,d][a,b,c] [a,b,d][a,b] [a,c,d][a,c] [a,d][a]# [b,c,d][b,c] [b,d][b] [c,d][c] [d][]    (16 instances)
+ 
+knowing treeTest, we can then reach and get any node instance below with built-in functions in the class
+"""
 def sumValues(lst):
     vals = [e[0] for e in lst]
     return sum(vals)
@@ -242,12 +257,12 @@ def WeightsBelow10(lst):
 def WeightsBelow6(lst):
     return sumWeights(lst) <= 6
 
-"""
+
 print ''
 print 'DFS decision tree'
 foobar = DFSDTree(treeTest, sumValues, WeightsBelow10)
 print foobar.getValue()
-
+"""
 print ''
 print 'BFS decision tree'
 foobarnew = BFSDTree(treeTest, sumValues, WeightsBelow10)
