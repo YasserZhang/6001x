@@ -5,8 +5,10 @@ code notebooks for edx mooc 6.001x
 
 ### how to travel around files and directories in python
 >>> import os
+
 >>> os.getcwd()
 '/home/ubuntu'
+
 ###get access to a sub-directory
 >>> os.chdir('Github')
 
